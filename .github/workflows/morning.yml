@@ -1,0 +1,16 @@
+name: Morning outfit notification
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 07:30 Germany during summer time. Change to 06:30 UTC in winter if using GitHub Actions.
+    - cron: "30 5 * * *"
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger morning endpoint
+        run: |
+          curl -fsS -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_BASE_URL }}/api/cron/morning"
