@@ -1,5 +1,15 @@
 import { getProfile, getRecentRecommendations } from "@/lib/db";
 
+type WeatherDisplay = {
+  morningTemp?: number;
+  maxTemp?: number;
+  precipProbMax?: number;
+};
+
+type RecommendationDisplay = {
+  outfit?: string;
+};
+
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
@@ -24,8 +34,8 @@ export default async function Home() {
         {logs.length === 0 ? <p>No recommendations yet.</p> : null}
         <div style={{ display: "grid", gap: 12 }}>
           {logs.map((log) => {
-            const weather = log.weather as any;
-            const recommendation = log.recommendation as any;
+            const weather = log.weather as WeatherDisplay;
+            const recommendation = log.recommendation as RecommendationDisplay;
             return (
               <article key={log.id} style={{ border: "1px solid #ddd", borderRadius: 16, padding: 16 }}>
                 <h3 style={{ marginTop: 0 }}>{log.date} — {log.city}</h3>
