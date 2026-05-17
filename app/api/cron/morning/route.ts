@@ -3,6 +3,14 @@ import { env } from "@/lib/config";
 import { runMorningJob } from "@/lib/morning";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
+
+function jsonNoStore(body: unknown, status = 200) {
+  const response = NextResponse.json(body, { status });
+  response.headers.set("cache-control", "no-store");
+  return response;
+}
 
 export async function GET(request: NextRequest) {
   const auth = request.headers.get("authorization");
@@ -11,17 +19,17 @@ export async function GET(request: NextRequest) {
   const isManualAuthorized = env.CRON_SECRET && auth === `Bearer ${env.CRON_SECRET}`;
 
   if (env.CRON_SECRET && !isVercelCron && !isManualAuthorized) {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+    return jsonNoStore({ ok: false, error: "Unauthorized" }, 401);
   }
 
   try {
     const result = await runMorningJob();
-    return NextResponse.json(result);
+    return jsonNoStore(result);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
+    return jsonNoStore(
       { ok: false, error: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
+      500
     );
   }
 }
