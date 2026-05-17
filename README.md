@@ -35,13 +35,36 @@ Create a Supabase project and run `supabase/schema.sql` in the SQL editor.
 
 Create a bot with `@BotFather` and copy the bot token.
 
-Then send a message to the bot from her Telegram account and open:
+Then the person who should receive the notifications must open the bot and send a message such as `hi`.
+
+Open this URL in the browser, replacing `YOUR_BOT_TOKEN` with the real token from BotFather:
 
 ```txt
 https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates
 ```
 
-Find `chat.id`. This is `TELEGRAM_CHAT_ID`.
+Find the numeric `chat.id` in the response. This is `TELEGRAM_CHAT_ID`.
+
+Example:
+
+```json
+"chat": {
+  "id": 7512227828,
+  "first_name": "Sommi",
+  "username": "philipster",
+  "type": "private"
+}
+```
+
+Then use:
+
+```bash
+TELEGRAM_CHAT_ID=7512227828
+```
+
+Important: the Telegram username is not the chat ID. The chat ID is the numeric value.
+
+Security note: if the token appeared in a screenshot, revoke it in BotFather and create a new API token before deploying.
 
 ## 3. Environment variables
 
