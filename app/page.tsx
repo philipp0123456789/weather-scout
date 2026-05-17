@@ -23,14 +23,18 @@ export default async function Home() {
         <h2>Recent recommendations</h2>
         {logs.length === 0 ? <p>No recommendations yet.</p> : null}
         <div style={{ display: "grid", gap: 12 }}>
-          {logs.map((log: any) => (
-            <article key={log.id} style={{ border: "1px solid #ddd", borderRadius: 16, padding: 16 }}>
-              <h3 style={{ marginTop: 0 }}>{log.date} — {log.city}</h3>
-              <p><b>Weather:</b> {log.weather?.morningTemp} °C morning, max {log.weather?.maxTemp} °C, rain {log.weather?.precipProbMax}%</p>
-              <p><b>Outfit:</b> {log.recommendation?.outfit}</p>
-              <p><b>Feedback:</b> {log.feedback ?? "none yet"}</p>
-            </article>
-          ))}
+          {logs.map((log) => {
+            const weather = log.weather as any;
+            const recommendation = log.recommendation as any;
+            return (
+              <article key={log.id} style={{ border: "1px solid #ddd", borderRadius: 16, padding: 16 }}>
+                <h3 style={{ marginTop: 0 }}>{log.date} — {log.city}</h3>
+                <p><b>Weather:</b> {weather?.morningTemp} °C morning, max {weather?.maxTemp} °C, rain {weather?.precipProbMax}%</p>
+                <p><b>Outfit:</b> {recommendation?.outfit}</p>
+                <p><b>Feedback:</b> {log.feedback ?? "none yet"}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
     </main>
