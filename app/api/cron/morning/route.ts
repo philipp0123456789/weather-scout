@@ -6,8 +6,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   const auth = request.headers.get("authorization");
+  const vercelCronHeader = request.headers.get("x-vercel-cron");
+  const isVercelCron = vercelCronHeader === "1";
+  const isManualAuthorized = env.CRON_SECRET && auth === `Bearer ${env.CRON_SECRET}`;
 
-  if (env.CRON_SECRET && auth !== `Bearer ${env.CRON_SECRET}`) {
+  if (env.CRON_SECRET && !isVercelCron && !isManualAuthorized) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
